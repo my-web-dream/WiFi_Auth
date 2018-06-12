@@ -1,0 +1,70 @@
+<!-- 认证模板选择 -->
+<extend name="Public:admin" />
+<block name="admin">
+<style type="text/css">
+	li label{
+		text-align:center;
+	}
+</style>
+<script type="text/javascript">
+$(function(){  
+	$('#auth_view').addClass('active');//添加选中样式
+})
+</script>
+
+<!-- 导航条 -->
+<div id="content-header">
+    <div id="breadcrumb"> <a href="#" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="current">模板管理</a> </div>
+    <h1>认证模板设置</h1>
+</div>
+<!-- 导航条结束-->
+
+<div class="container-fluid"><hr>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="widget-box">
+				<div class="widget-title"> <span class="icon"> <i class="icon-picture"></i> </span>
+            		<h5>认证模板</h5>
+          		</div>
+          	<div class="widget-content">
+            	<ul class="thumbnails">
+              		<li class="span2"> <a> <img src="__PUBLIC__/img/main/auth/default.jpg" alt="" > </a>
+	                	<div class="actions"> <a title="" class="" href="#"><i class="icon-pencil"></i></a> <a class="lightbox_trigger" href="__PUBLIC__/img/main/auth/default.jpg"><i class="icon-search"></i></a> </div>
+	              		<label>
+				    		<input type="radio" name="default" />默认模板
+				    	</label>
+              		</li>
+		            <li class="span2"> <a> <img src="__PUBLIC__/img/main/auth/wifiadv.jpg" alt="" > </a>
+		                <div class="actions"> <a title="" class="" href="#"><i class="icon-pencil"></i></a> <a class="lightbox_trigger" href="__PUBLIC__/img/main/auth/wifiadv.jpg"><i class="icon-search"></i></a> </div>
+		              	<label>
+				    		<input type="radio" name="first" />模板1
+				    	</label>
+		            </li>
+		            <li class="span2"> <a> <img src="__PUBLIC__/img/main/auth/wood.jpg" alt="" > </a>
+		                <div class="actions"> <a title="" class="" href="#"><i class="icon-pencil"></i></a> <a class="lightbox_trigger" href="__PUBLIC__/img/main/auth/wood.jpg"><i class="icon-search"></i></a> </div>
+		              	<label>
+				    		<input type="radio" name="second" />模板2
+				    	</label>
+		            </li>
+              		<li class="span2"> <a> <img src="__PUBLIC__/img/main/auth/newadv.jpg" alt="" > </a>
+                		<div class="actions"> <a title="" class="" href="#"><i class="icon-pencil"></i></a> <a class="lightbox_trigger" href="__PUBLIC__/img/main/auth/newadv.jpg"><i class="icon-search"></i></a> </div>
+              			<label>
+				    		<input type="radio" name="third" />模板3
+				    	</label>
+              		</li>
+              		<li class="span2"> <a> <img src="__PUBLIC__/img/main/auth/newyear.jpg" alt="" > </a>
+                		<div class="actions"> <a title="" class="" href="#"><i class="icon-pencil"></i></a> <a class="lightbox_trigger" href="__PUBLIC__/img/main/auth/newyear.jpg"><i class="icon-search"></i></a> </div>
+              			<label>
+				    		<input type="radio" name="forth" />模板4
+				    	</label>
+              		</li>
+              	</ul>
+            	<button class="btn btn-info">保存</button>
+          	</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+</block>

@@ -1,0 +1,31 @@
+<extend name="Public:api" />
+<block name="content">
+	<!--认证方式 start-->
+	<div class="hd_tip">&nbsp;&nbsp;对不起，服务器拒绝了您的请求</div>
+	<!--认证方式 end-->
+	<!--服务列表 start-->
+	<div id="xj_pic">
+		<img src="__PUBLIC__/img/api/error.jpg">
+	</div>
+	<!--服务列表 end-->
+	<!--免费上网入口 start-->
+	<div class="enter"><em>对不起，服务器拒绝了您的请求</em></div>
+	<!--免费上网入口 end-->
+		<script language="JavaScript" type="text/javascript">
+			function delayURL(url) {
+				var delay = document.getElementById("time").innerHTML;
+				if(delay > 0) {
+					delay--;
+					document.getElementById("time").innerHTML = delay;
+				} else {
+					window.top.location.href = url;
+				}
+				setTimeout("delayURL('" + url + "')", 1000);
+			}
+		</script>
+		<div style="text-align:center">WIFI认证失败,<span id="time" style="color: #F1560C">5</span>秒后自动跳转到认证首页</a></div>
+		<script type="text/javascript">
+		delayURL("../login");
+		</script>
+		<!--<div class="enter"><a href="http://192.168.1.1:2060/wifidog/auth/login?logout=1&token="><em>点击这里退出网络</em></a></div>-->
+</block>

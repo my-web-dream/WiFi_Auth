@@ -1,0 +1,69 @@
+<extend name="Public:class" />
+<block name="class">
+<script type="text/javascript">
+$(function(){
+	$(".m-btnconfirm a").click(function(){
+		var subject = $("select[name='subject']").find("option:selected").text();	//获取名称
+		var teacher = $("input[name='teacher']").val();
+		var describe = $("textarea[name='describe']").val();
+		if(subject == "请选择科目"){
+			layer.msg('您还没有选择学科！');
+			return false;
+		}
+		if(teacher == ""){
+			layer.msg('教师姓名必填！');
+			return false;
+		}
+		if(describe == ""){
+			layer.msg('作业信息必填！');
+			return false;
+		}
+		if(describe.length > 100){
+			layer.msg('作业描述过长！');
+			return false;
+		}
+		//ajax提交，弹窗提示ok
+        $.post("<{:U('Class/homework_sub')}>",{subject:subject,teacher:teacher,describe:describe},function(data,status){
+        	if(data == 'success'){
+        		layer.msg('作业发布成功！',{time:1500},function(){
+        			window.location.href = "<{:U('Class/homework')}>";
+        		});
+        	}else{
+        		layer.msg('作业保存失败,请重试！');
+        	}
+        });	//post   
+	})
+})
+</script>
+	<article class="main">
+		<div class="m-body">
+			<header class="m-title">
+				<span>作业发布</span>
+			</header>
+			<seciton class="m-content">
+				<div class="m-group">
+					<label class="m-grouptitle">所属科目:</label>
+					<select class="select" name="subject" style="width:150px;height:30px;">
+						<option selected="selected" value="0">请选择科目</option>
+						<option value="1">语文</option>
+						<option value="2">数学</option>
+						<option value="3">英语</option>
+						<option value="4">自然科学</option>
+					</select>
+				</div>
+				<div class="m-group">
+					<label class="m-grouptitle">教师姓名:</label>
+					<input type="text" name="teacher" placeholder="请填写教师姓名" value=""/>
+				</div>
+				<div class="m-group">
+					<label class="m-grouptitle">作业描述：</label>
+					<textarea name="describe" placeholder="字数限100字以内" /></textarea>
+				</div>
+				<div class="m-btnconfirm">
+					<a href="javascript:void(0)">发布</a>
+				</div>
+			</seciton>
+		</div>
+	</article>
+</block>
+

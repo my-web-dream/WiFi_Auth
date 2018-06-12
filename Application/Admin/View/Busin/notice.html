@@ -1,0 +1,56 @@
+<!-- 商铺管理 -->
+<extend name="Public:busin" />
+<block name="busin">
+<script type="text/javascript">
+$(function(){  
+	$('#notice').addClass('active');//添加选中样式
+})
+</script>
+	<!-- 导航条 -->
+	<div id="content-header">
+    	<div id="breadcrumb"> <a href="#" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="current">历史公告</a> </div>
+    	<h1>系统公告</h1>
+  	</div>
+  	<!-- 导航条结束-->
+  	
+  	<!-- 表格数据 -->
+  	<div class="container-fluid">
+    <hr>
+		<div class="row-fluid">
+			<div class="span12">
+        		<div class="widget-box">
+          			<div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            			<h5>全部历史公告</h5>
+          			</div>
+          			<div class="widget-content nopadding">
+            		<table class="table table-bordered table-striped">
+            			<thead>
+	               			<tr>
+			                  	<th> <input type="checkbox"> </th>
+								<th> 序号 </th>
+								<th> 版本号 </th>
+								<th> 标题 </th>
+								<th> 发布时间 </th>
+								<th> 描述 </th>
+	                		</tr>
+              			</thead>
+              			<tbody>
+               				<volist name="info" id="va">
+							<tr>
+								<td><input type="checkbox"></td>
+								<td><{$i}></td>
+								<td><{$va.number}></td>
+								<td><{$va.title}></td>
+								<td><{$va.date|date="Y-m-d H:i:s",###}></td>
+								<td><{$va.describe}></td>
+							</tr>
+							</volist>
+              			</tbody>
+            		</table>
+          			</div>
+        		</div>
+       		</div>
+		</div>
+	</div>
+  	<!-- 表格数据结束 -->
+</block>

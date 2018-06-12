@@ -1,0 +1,142 @@
+<?php
+namespace Admin\Controller;
+use Think\Controller;
+
+/**
+ * 班级信息
+ */
+class GradeController extends Controller {
+	
+	/**************************年级管理**********************/
+	/**
+	 *  年级信息(首页展示)
+	 */
+	public function grade_info(){
+		$info = M('Grade_info')->alias('grade')
+			->join('left join School_info sch on sch.id = grade.school_id')
+			->where(array('grade.id'=>session('auth_id')))
+			->field('grade.name,grade.leader,grade.phone_number,sch.name as sch_name')
+			->find();
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 *  年级管理员信息
+	 */
+	public function grade_leader_info(){
+		$info = M('Staff_info')
+			->where(array('auth'=>'grade','auth_id'=>session('auth_id')))
+			->field('name,object_name,phone_number')
+			->select();
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**************************班级管理**********************/
+	/**
+	 * 班级基本信息
+	 */
+	public function class_info(){
+		$result = M('Grade_info')
+		-> where(array('id'=>session('auth_id')))
+		-> field('school_id')
+		-> find();
+		$res['grade_id'] = array('eq',session('auth_id'));
+		$res['school_id'] = array('eq',$result['school_id']);
+		$info = M('Class_info')
+		-> where($res)
+		-> select();
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 * 添加学生信息
+	 */
+	public function student_info_add(){
+		$arr = I('post.arr');	//获取前台数组
+		$data['name'] = $arr['0'];	//学生姓名
+		$data['sex'] = $arr['1'];	//学生性别
+		$data['device_id'] = $arr['2'];	//学生证编号
+		$data['parent_name'] = $arr['3'];	//联系人姓名
+		$data['parent_phone'] = $arr['4'];	//联系人电话
+		$data['class_id'] = session('auth_id');	//班级id
+		$info = M('Class_info')
+		-> where(array('id'=>session('auth_id')))
+		-> field('school_id,grade_id')
+		-> find();
+		$data['grade_id'] = $info['grade_id'];	//年级id
+		$data['school_id'] = $info['school_id'];	//学校id
+		$res = M('Student_info')->add($data);	//添加学生信息
+		if($res){
+			echo 'add_success';
+		}else{
+			echo 'add_failed';
+		}
+	}
+	/**
+	 *  班级学生运动轨迹
+	 */
+	public function student_orbit(){
+		//默认显示当日时间，有时间则显示该日
+		$now = I('get.date');
+		$_GET['time'] = default_time($now);//用于前台显示
+		$date = strtotime($now);	//获取前台提交时间
+		$device_id = I('get.device_id');	//设备id
+		$result = D('Class') -> position($date,$device_id);
+		$orbit = $result['orbit'];
+		$arr = $result['arr'];
+		$jd_center = $result['jd_center'];
+		$wd_center = $result['wd_center'];
+		//首次展示无经纬度坐标,设置初始默认坐标
+		if(!$jd_center && !$wd_center){
+			$jd_center = '104.06';
+			$wd_center = '30.67';
+		}
+		$this -> assign('jd_center',$jd_center);	//经度中心坐标
+		$this -> assign('wd_center',$wd_center);//纬度中心坐标
+		$this -> assign('orbit',$orbit);	//轨迹
+		$this -> assign('arr',$arr);	//轨迹+文字标记
+		$this -> display();
+	}
+	/**
+	 * 学生考勤管理 
+	 */
+	public function student_attend(){
+		//默认显示当日时间，有时间则显示该日
+		$date = I('get.date');//获取前台提交时间
+		$_GET['time'] = default_time($date);//用于前台显示
+		$device_id = I('get.device_id');	//设备id
+		//多表联查学生考勤信息
+		$info = D('Class') -> attend($date,$device_id);
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**************************个人信息管理**********************/
+	/**
+	 * 个人信息管理
+	 */
+	public function pro_info(){
+		$username = session('username');
+		$public = new PublicController();
+		$info = $public -> pro_info($username);
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 * 个人信息管理--更新
+	 */
+	public function pro_info_update(){
+		$data['name'] = I('post.name');
+		$data['phone_number'] = I("post.phone_number");
+		//$file = $_FILES['editor_img'];	//上传头像
+		$data['create_time'] = time();	
+		$res = M('Staff_info')
+		-> where(array('username'=>session('username')))
+		-> save($data);
+		if($res){
+			echo 'success';
+		}else{
+			echo 'failed';
+		}
+	}
+
+}

@@ -1,0 +1,218 @@
+<?php
+namespace Admin\Controller;
+use Think\Controller;
+
+/**
+ * 班级信息
+ */
+class ClassController extends Controller {
+	public function test(){
+		
+	}
+	public function test_page(){
+		$table = 'Test';
+		$page = I('get.page');	//获取当前是第几页
+		if(!$page){	//首次访问此页为1
+			$page = 1;
+		}
+		$public = new PublicController();
+		$res = $public -> page($table,$page);
+		$this -> assign('total_pages',$res['total_pages']);//显示总页数
+		$this -> assign('page',$res['page']);	//显示第几页
+		$this -> assign('info',$res['select_info']);	//显示当前页的数据
+		$this -> display();
+	}
+	/**************************班级管理**********************/
+	/**
+	 *  班级信息(首页展示)
+	 */
+	public function class_info(){
+		//$info = S('class_info');
+		//if(!$info){
+			$info = M('Class_info')->alias('class')
+			->join('left join Grade_info grade on grade.id = class.grade_id')
+			->join('left join School_info sch on sch.id = class.school_id')
+			->where(array('class.id'=>session('auth_id')))
+			->field('class.name,class.leader,class.phone_number,grade.name as grade_name,sch.name as sch_name')
+			->find();
+			//班级信息添加缓存
+			//S('class_info',$info,3600);
+		//}
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 *  班级负责人信息
+	 */
+	public function class_leader_info(){
+		
+		$info = M('Staff_info')
+			->where(array('auth'=>'class','auth_id'=>session('auth_id')))
+			->field('name,object_name,phone_number')
+			->select();
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**************************学生管理**********************/
+	/**
+	 * 学生基本信息
+	 */
+	public function student_info(){
+		$result = M('Class_info')
+		-> where(array('id'=>session('auth_id')))
+		-> field('school_id,grade_id')
+		-> find();
+		$res['class_id'] = array('eq',session('auth_id'));
+		$res['grade_id'] = array('eq',$result['grade_id']);
+		$res['school_id'] = array('eq',$result['school_id']);
+		$info = M('Student_info')
+		-> where($res)
+		-> field('name,sex,parent_name,parent_phone,device_id')
+		-> select();
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 * 添加学生信息
+	 */
+	public function student_info_add(){
+		$arr = I('post.arr');	//获取前台数组
+		$data['name'] = $arr['0'];	//学生姓名
+		$data['sex'] = $arr['1'];	//学生性别
+		$data['device_id'] = $arr['2'];	//学生证编号
+		$data['parent_name'] = $arr['3'];	//联系人姓名
+		$data['parent_phone'] = $arr['4'];	//联系人电话
+		$data['class_id'] = session('auth_id');	//班级id
+		$info = M('Class_info')
+		-> where(array('id'=>session('auth_id')))
+		-> field('school_id,grade_id')
+		-> find();
+		$data['grade_id'] = $info['grade_id'];	//年级id
+		$data['school_id'] = $info['school_id'];	//学校id
+		$res = M('Student_info')->add($data);	//添加学生信息
+		if($res){
+			echo 'add_success';
+		}else{
+			echo 'add_failed';
+		}
+	}
+	/**
+	 *  班级学生运动轨迹
+	 */
+	public function student_orbit(){
+		//默认显示当日时间，有时间则显示该日
+		$now = I('get.date');
+		$_GET['time'] = default_time($now);//用于前台显示
+		$date = strtotime($now);	//获取前台提交时间
+		$device_id = I('get.device_id');	//设备id
+		$result = D('Class') -> position($date,$device_id);
+		$orbit = $result['orbit'];
+		$arr = $result['arr'];
+		$jd_center = $result['jd_center'];
+		$wd_center = $result['wd_center'];
+		//首次展示无经纬度坐标,设置初始默认坐标
+		if(!$jd_center && !$wd_center){
+			$jd_center = '104.06';
+			$wd_center = '30.67';
+		}
+		$this -> assign('jd_center',$jd_center);	//经度中心坐标
+		$this -> assign('wd_center',$wd_center);//纬度中心坐标
+		$this -> assign('orbit',$orbit);	//轨迹
+		$this -> assign('arr',$arr);	//轨迹+文字标记
+		$this -> display();
+	}
+	/**
+	 * 学生考勤管理 
+	 */
+	public function student_attend(){
+		//默认显示当日时间，有时间则显示该日
+		$date = I('get.date');//获取前台提交时间
+		$_GET['time'] = default_time($date);//用于前台显示
+		$device_id = I('get.device_id');	//设备id
+		//多表联查学生考勤信息
+		$info = D('Class') -> attend($date,$device_id);
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 * 学生报警管理
+	 */
+	public function student_sos(){
+		//默认显示当日时间，有时间则显示该日
+		$date = I('get.date');//获取前台提交时间
+		$_GET['time'] = default_time($date);//用于前台显示
+		$device_id = I('get.device_id');	//设备id
+		//多表联查学生考勤信息
+		$info = D('Class') -> sos($date,$device_id);
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 * 学生报警地图展示 
+	 */
+	public function student_sos_map(){
+		$jd = I("get.longitude");
+		$wd = I('get.latitude');
+		$date_time = I('get.date').' '.I('get.time');
+		$this -> assign('jd',$jd);
+		$this -> assign('wd',$wd);
+		$this -> assign('date_time',$date_time);
+		$this -> display();
+	}
+	/***************************班级设备管理**********************/
+	public function device_bind(){
+		$result = M('Class_info')
+		-> where(array('id'=>session('auth_id')))
+		-> field('school_id,grade_id')
+		-> find();
+		$res['stu.class_id'] = array('eq',session('auth_id'));
+		$res['stu.grade_id'] = array('eq',$result['grade_id']);
+		$res['stu.school_id'] = array('eq',$result['school_id']);
+		$info = M('Student_info')->alias('stu')
+		->join('left join device_handlering de on de.deviceID = stu.device_id')
+		->where($res)
+		->field('stu.name,stu.device_id,de.collectRate,de.uploadRate')
+		->select();
+		//var_dump($info);
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	//学生绑定信息详情，ajax返回
+	public function bind_detail(){
+		$device_id = I('post.device_id');
+		$info = M('Device_handlering')
+		-> where(array('deviceID'=>$device_id))
+		-> field('IMEI,IMSI,collectRate,uploadRate,powerOnDateTime,powerOffDateTime,sos')
+		-> find();
+		$this ->ajaxReturn($info);die;
+	}
+	/**************************个人信息管理**********************/
+	/**
+	 * 个人信息管理
+	 */
+	public function pro_info(){
+		$username = session('username');
+		$public = new PublicController();
+		$info = $public -> pro_info($username);
+		$this -> assign('info',$info);
+		$this -> display();
+	}
+	/**
+	 * 个人信息管理--更新
+	 */
+	public function pro_info_update(){
+		$data['name'] = I('post.name');
+		$data['phone_number'] = I("post.phone_number");
+		//$file = $_FILES['editor_img'];	//上传头像
+		$data['create_time'] = time();	
+		$res = M('Staff_info')
+		-> where(array('username'=>session('username')))
+		-> save($data);
+		if($res){
+			echo 'success';
+		}else{
+			echo 'failed';
+		}
+	}
+
+}

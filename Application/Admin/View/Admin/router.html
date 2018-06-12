@@ -1,0 +1,183 @@
+<!-- 活动管理 -->
+<extend name="Public:admin" />
+<block name="admin">
+<!-- 引入时间控件 -->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/js/datetimepicker/jquery.datetimepicker.css"/>
+<script src="__PUBLIC__/js/datetimepicker/jquery.js"></script>
+<script src="__PUBLIC__/js/datetimepicker/build/jquery.datetimepicker.full.js"></script>
+<!-- highcharts控件 -->
+<script type="text/javascript" src="__PUBLIC__/js/highcharts.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/exporting.js"></script>
+<script type="text/javascript">
+$(function(){  
+	$('#router').addClass('active');//添加选中样式
+	//日期控件调整
+	$("#datetimepicker").datetimepicker({
+		  minView: "month",//设置只显示到月份
+		  language:  'zh-CN',
+		  format : "20y-m-d",//日期格式
+		  autoclose:true,//选中关闭
+		  todayBtn: true//今日按钮
+	});
+	//查询提交
+	$('#button').click(function(){
+		var date =  $('input[name="date"]').val();
+		var url = "<{:U('Admin/router')}>" + '?date='+date;  
+		window.location.href = url;  
+	})
+	
+	//
+	Highcharts.setOptions({
+            lang: {
+               　			printChart:"打印图表",
+            	downloadJPEG: "下载JPEG图片" , 
+            	downloadPDF: "下载PDF文档"  ,
+            	downloadPNG: "下载PNG图片"  ,
+            	downloadSVG: "下载SVG矢量图" , 
+            	exportButtonTitle: "导出图片" 
+            }
+        });
+		$('#sys_memfree').highcharts({
+	        title: {
+	            text: '设备 "<{$router_id}>" 于 "<{$date}>" 的"内存使用情况"数据统计',
+	            x: -20 //center
+	        },
+	        xAxis: {
+	            categories: ['<{$router_time}>']
+	        },
+	        yAxis: {
+	            title: {
+	                text: '内存大小'
+	            },
+	            plotLines: [{
+	                value: 0,
+	                width: 1,
+	                color: '#808080'
+	            }]
+	        },
+	        tooltip: {
+	            valueSuffix: 'Kb'
+	        },
+	        legend: {
+	            layout: 'vertical',
+	            align: 'right',
+	            verticalAlign: 'middle',
+	            borderWidth: 0
+	        },
+	        colors: [
+	        	'red'
+	        ],
+	        credits:{
+	        	enabled:false	//取消显示版权
+	        },
+	        series: [{
+	            name: '空闲内存',
+	            data: [<{$router_sys_memfree}>]
+	        }]
+	    });
+
+		$('#sys_load').highcharts({
+	        title: {
+	            text: '设备 "<{$router_id}> 于 "<{$date}>" 的"负载"数据统计',
+	            x: -20 //center
+	        },
+	        colors: [
+	 	        	'green'
+	 	        ],
+	        xAxis: {
+	            categories: ['<{$router_time}>']
+	        },
+	        yAxis: {
+	            title: {
+	                text: '负载'
+	            },
+	            plotLines: [{
+	                value: 0,
+	                width: 1,
+	                color: '#808080'
+	            }]
+	        },
+	        credits:{
+	        	enabled:false	//取消显示版权
+	        },
+	        tooltip: {
+	            valueSuffix: 'rh'
+	        },
+	        legend: {
+	            layout: 'vertical',
+	            align: 'right',
+	            verticalAlign: 'middle',
+	            borderWidth: 0
+	        },
+	        series: [{
+	            name: '负载统计',
+	            data: [<{$router_sys_load}>]
+	        }]
+	    });
+	//
+})
+
+</script>
+	<!-- 导航条 -->
+	<div id="content-header">
+    	<div id="breadcrumb"> <a href="#" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="current">路由器管理</a> </div>
+    	<h1>当前状态</h1>
+  	</div>
+  	<!-- 导航条结束-->
+  	
+  	<!-- 表格数据 -->
+  	<div class="container-fluid">
+    <hr>
+		<div class="row-fluid">
+       	<!-- 查看结果 -->
+			<div class="span12">
+        		<div class="widget-box">
+          			<div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            			<h5>查看路由器状态</h5>
+          			</div>
+          			<form  class="form-horizontal">
+          				<div class="control-group">
+              				<label class="control-label">当前路由器名称：</label>
+              				<div class="controls">
+                				<{$router_id}>
+              				</div>
+            			</div>
+            			<div class="control-group">
+              				<label class="control-label">当前路由器启动时间：</label>
+              				<div class="controls">
+                				<{$sys_uptime}>秒
+              				</div>
+            			</div>
+            			<div class="control-group">
+              				<label class="control-label">当前wifidog启动时间：</label>
+              				<div class="controls">
+                				<{$wifidog_uptime}>秒
+              				</div>
+            			</div>
+			            <div class="control-group">
+			              	<label class="control-label">时间：</label>
+			              	<div class="controls">
+			                	<input type="text" name="date" class="span11" id='datetimepicker' style="width:150px;">
+			              	</div>
+			              	<script type="text/javascript">
+	 							$('#datetimepicker').datetimepicker({value:'<{$Think.get.time}>',step:10});
+							</script>
+			            </div>
+			            <div class="form-actions">
+			              <button type="button" id="button" class="btn btn-success">查看</button>
+			            </div>
+          			</form>
+          			<div class="widget-content nopadding">
+            			<eq name="test" value="no">
+                  			<h2 align="center">当前暂无相关信息，请重新输入查询条件</h2>
+             			<else/>
+                  			<div id="sys_memfree" style="min-width:700px;height:400px"></div>
+                  			<div id="sys_load" style="min-width:700px;height:400px"></div>
+            			 </eq>
+          			</div>
+        		</div>
+       		</div>
+		</div>
+	</div>
+  	<!-- 表格数据结束 -->
+</block>

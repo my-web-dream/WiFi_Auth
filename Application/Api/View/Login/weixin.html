@@ -1,0 +1,35 @@
+<extend name="Public:api" />
+<block name="content">
+<script type="text/javascript">
+function check()
+{
+	//ajax访问后台，查看用户是否已关注微信公众号
+	$.post("<{:U('api.php/Login/weixin_check')}>",{},function(data,status){
+			if(data == 0){
+				layer.msg("对不起，您还没有关注公众号");
+			}else if(data == 1){
+				layer.msg("恭喜您，即将放行",{time:3000},function(){
+					$("form").submit();
+				});
+			}else{
+				layer.msg("未知错误，请联系管理员");
+			}
+		});//ajax提交结束
+}
+</script>
+	<!--认证方式 start-->
+	<div class="hd_tip">&nbsp;&nbsp;您当前的认证方式为：微信认证</div>
+	<!--认证方式 end-->
+	<!--服务列表 start-->
+	<div id="xj_weixin">
+		<img src="__PUBLIC__/img/api/weixin.jpg">
+		<form method="post" action="<{:U('api.php/Login/weixin_sub')}>">
+			<button type="button" onClick="check();" class="button" >已关注，申请上网</button>
+		</form>
+	</div>
+	
+	<!--服务列表 end-->
+	<!--免费上网入口 start-->
+	<div class="enter"><em>欢迎您使用商场Wifi！</em></div>
+		
+</block>

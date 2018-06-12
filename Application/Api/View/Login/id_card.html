@@ -1,0 +1,20 @@
+<extend name="Public:api" />
+<block name="content">
+
+	<!--认证方式 start-->
+	<div class="hd_tip">&nbsp;&nbsp;您当前的认证方式为：身份证认证</div>
+	<!--认证方式 end-->
+	<!--服务列表 start-->
+	<div id="xj_form">
+		<form name="id_card" method="post" action="<{:U('api.php/Login/id_card')}>">
+			身份证号：<input type="text" style="width:200px;"name="id_card" placeholder="请输入您的身份证号" />
+			<br><br>
+			<button type="submit" class="button" >提交</button>
+		</form>
+	</div>
+	<!--服务列表 end-->
+	<!--免费上网入口 start-->
+	<div class="enter"><em>欢迎您使用商场Wifi！</em></div>
+	<!--免费上网入口 end-->
+	
+</block>

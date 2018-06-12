@@ -1,0 +1,68 @@
+<extend name="Public:busin" />
+<block name="busin">
+<!-- 引入时间控件 -->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/js/datetimepicker/jquery.datetimepicker.css"/>
+<script src="__PUBLIC__/js/datetimepicker/jquery.js"></script>
+<script src="__PUBLIC__/js/datetimepicker/build/jquery.datetimepicker.full.js"></script>
+<script type="text/javascript">
+$(function(){  
+	$('#active').addClass('active');//添加选中样式
+	//日期控件调整
+	$("#datetimepicker").datetimepicker({
+		  minView: "month",//设置只显示到月份
+		  language:  'zh-CN',
+		  format : "20y-m-d",//日期格式
+		  autoclose:true,//选中关闭
+		  todayBtn: true//今日按钮
+	});
+})
+
+</script>
+	<!-- 导航条 -->
+	<div id="content-header">
+    	 <div id="breadcrumb"> <a href="index.html" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="tip-bottom">活动管理</a> <a href="#" class="current">发布活动</a> </div>
+    	<h1>发布新的活动</h1>
+  	</div>
+  	<!-- 导航条结束-->	
+	
+	<div class="container-fluid">
+  	<hr>
+  		<div class="row-fluid">
+    		<div class="span6">
+      			<div class="widget-box">
+        			<div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          				<h5>新增活动</h5>
+        			</div>
+        		<div class="widget-content nopadding">
+          			<form action="#" method="get" class="form-horizontal">
+            			<div class="control-group">
+              				<label class="control-label">标题：</label>
+              				<div class="controls">
+                				<input type="text" class="span11" placeholder="公告标题" />
+              				</div>
+            			</div>
+			            <div class="control-group">
+			              	<label class="control-label">活动时间：</label>
+			              	<div class="controls">
+			                	<input type="text" class="span11" id='datetimepicker' style="width:150px;">
+			              	</div>
+			              	<script type="text/javascript">
+	 							$('#datetimepicker').datetimepicker({value:'<{$Think.get.time}>',step:10});
+							</script>
+			            </div>
+			            <div class="control-group">
+			              	<label class="control-label">详细描述：</label>
+				           	<div class="controls">
+				               	<textarea class="span11" rows="6" placeholder="请填写详细信息"></textarea>
+				           	</div>
+			           	</div>
+			            <div class="form-actions">
+			              <button type="button" class="btn btn-success">发布</button>
+			            </div>
+          			</form>
+        		</div>
+      		</div>
+       	</div>
+	</div>
+</div>
+</block>

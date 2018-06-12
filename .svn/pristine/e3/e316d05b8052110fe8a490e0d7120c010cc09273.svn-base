@@ -1,0 +1,68 @@
+<extend name="Public:class" />
+<block name="class">
+<script type="text/javascript">
+$(function(){
+	$("#find_student_attend").click(function(){	//跳转到编辑页面
+		var date = $("input[name='date']").val();
+		var device_id = $("input[name='device_id']").val();
+		var url = "<{:U('Class/student_sos')}>" + '?date='+date+"&device_id="+device_id;
+		window.location.href = url;  
+	});
+})
+function map(name,deviceID,longitude,latitude,time){
+	var date = $("input[name='date']").val();
+	//设置后台地址
+	var url = '<{:U("Class/student_sos_map")}>'+'?date='+date+'&time='+time+
+		'&student_name='+name +'&deviceID='+deviceID+'&longitude='+longitude+'&latitude='+latitude;
+	window.open(url,'newwindow', 'height=530, width=1200, top=104, left=50, toolbar=no, menubar=no, scrollbars=no,resizable=no,location=no, status=no');
+}
+</script>
+	<article class="main">
+		<div class="m-body">
+			<header class="m-title">
+				<span>学生报警管理</span>
+			</header>
+			<seciton class="m-content">
+				<div class="m-group">
+					<form action="" method="get">
+			  			<input name="date" type="date" value="<{$Think.get.time}>" style="width:150px;"/>
+			  			<input name="device_id" type="text"  value="<{$Think.get.device_id}>" placeholder="请输入设备号" style="width:150px;"/>
+			  			<br><div class="m-btnconfirm" id="find_student_attend">查看</div>
+		    		</form>
+	    		</div>
+	    		<div class="m-data">
+					<table>
+						<thead>
+							<tr>
+								<th> <input type="checkbox"> </th>
+								<th> 序号 </th>
+								<th> 学生姓名 </th>
+								<th> 设备编号 </th>
+								<th> IMEI </th>
+								<th> IMSI </th>
+								<th> 报警时间 </th>
+								<th> 详情 </th>
+							</tr>
+						</thead>
+						<tbody>
+							<volist name="info" id="va">
+							<tr>
+								<td><input type="checkbox"></td>
+								<td><{$i}></td>
+								<td><{$va.name}></td>
+								<td><{$va.deviceID}></td>
+								<td><{$va.IMEI}></td>
+								<td><{$va.IMSI}></td>
+								<td><{$va.utcDateTime|date="H:i:s",###}></td>
+								<td>
+									<a href="#" class="add-member" onclick="map('<{$va.name}>','<{$va.deviceID}>','<{$va.longitude}>','<{$va.latitude}>','<{$va.utcDateTime|date="H:i:s",###}>')">查看详情</a>
+								</td>
+							</tr>
+							</volist>
+						</tbody>
+					</table>
+				</div>
+			</seciton>
+		</div>
+	</article>
+</block>

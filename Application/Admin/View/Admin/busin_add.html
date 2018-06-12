@@ -1,0 +1,112 @@
+<extend name="Public:admin" />
+<block name="admin">
+<script type="text/javascript">
+$(function(){  
+	$('#business').addClass('active');//添加选中样式
+	//查询提交
+	$('#button').click(function(){
+		var name =  $('input[name="name"]').val();
+		var people =  $('input[name="people"]').val();
+		var phone =  $('input[name="phone"]').val();
+		var describe =  $('textarea[name="describe"]').val();
+		$("form").submit();
+	})
+})
+</script>
+	<!-- 导航条 -->
+	<div id="content-header">
+    	 <div id="breadcrumb"> <a href="index.html" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="tip-bottom">商家管理</a> <a href="#" class="current">新增商家</a> </div>
+    	<h1>添加商家信息</h1>
+  	</div>
+  	<!-- 导航条结束-->	
+	
+	<div class="container-fluid">
+  	<hr>
+  		<div class="row-fluid">
+    		<div class="span6">
+      			<div class="widget-box">
+        			<div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          				<h5>添加商家</h5>
+        			</div>
+        		<div class="widget-content nopadding">
+          			<form action="<{:U('Admin/busin_add_sub')}>" method="post" class="form-horizontal">
+            			<div class="control-group">
+              				<label class="control-label">店铺名称：</label>
+              				<div class="controls">
+                				<input type="text" class="span11" name="name" placeholder="店铺名称" />
+              				</div>
+            			</div>
+			            <div class="control-group">
+			              	<label class="control-label">店铺联系人：</label>
+			              	<div class="controls">
+			                	<input type="text" class="span11" name="people" placeholder="店铺联系人" />
+			              	</div>
+			            </div>
+			            <div class="control-group">
+			            	<label class="control-label">联系方式：</label>
+			              	<div class="controls">
+			                	<input type="text"  class="span11" name="phone" placeholder="联系方式"  />
+			              	</div>
+			            </div>
+			            <div class="control-group">
+			            	<label class="control-label">所属类型：</label>
+			              	<div class="controls">
+			                	<label>
+			                  		<input type="radio" name="food" />餐饮类型
+			                  	</label>
+			                	<label>
+			                  		<input type="radio" name="clothes" />服装品牌
+			                  	</label>
+			                	<label>
+			                  		<input type="radio" name="sport" />体育用品
+			                  	</label>
+			                  	<label>
+			                  		<input type="radio" name="live" />生活用品
+			                  	</label>
+			                  	<label>
+			                  		<input type="radio" name="game" />游戏娱乐
+			                  	</label>
+			                  	<label>
+			                  		<input type="radio" name="other" />其他
+			                  	</label>
+			                  </div>
+			            </div>
+			            <div class="control-group">
+			              	<label class="control-label">所在楼层：</label>
+			              	<div class="controls">
+			                	<label>
+			                  		<input type="radio" name="floor_first" />1楼
+			                  	</label>
+			                	<label>
+			                  		<input type="radio" name="floor_second" />2楼
+			                  	</label>
+			                	<label>
+			                  		<input type="radio" name="floor_third" />3楼
+			                  	</label>
+			                  	<label>
+			                  		<input type="radio" name="floor_forth" />4楼
+			                  	</label>
+			                  	<label>
+			                  		<input type="radio" name="floor_fifth" />5楼
+			                  	</label>
+			                  	<label>
+			                  		<input type="radio" name="floor_sixth" />6楼
+			                  	</label>
+			                  </div>
+			            </div>
+			            <div class="control-group">
+			              	<label class="control-label">其他描述：</label>
+				           	<div class="controls">
+				               	<textarea class="span11" name="describe"></textarea>
+				           	</div>
+			           	</div>
+			            <div class="form-actions">
+			              <button type="button" id="button" class="btn btn-success">保存</button>
+			            </div>
+          			</form>
+        		</div>
+      		</div>
+       	</div>
+	</div>
+</div>
+</block>

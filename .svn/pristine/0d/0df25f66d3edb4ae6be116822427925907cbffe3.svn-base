@@ -1,0 +1,54 @@
+<extend name="Public:grade" />
+<block name="grade">
+<script type="text/javascript">
+$(function(){
+	$(".m-btnconfirm a").click(function(){
+		var title = $("input[name='title']").val();
+		var describe = $("textarea[name='describe']").val();
+		if(title == ""){
+			layer.msg('标题必填！');
+			return false;
+		}
+		if(describe == ""){
+			layer.msg('内容必填！');
+			return false;
+		}
+		if(describe.length > 100){
+			layer.msg('内容过长！');
+			return false;
+		}
+		//ajax提交，弹窗提示ok
+        $.post("<{:U('Grade/notice_release')}>",{title:title,describe:describe},function(data,status){
+        	if(data == 'success'){
+        		layer.msg('通知发布成功！',{time:1500},function(){
+        			window.location.href = "<{:U('Grade/notice_select')}>";
+        		});
+        	}else{
+        		layer.msg('通知发布失败,请重试！');
+        	}
+        });	//post   
+	})
+})
+</script>
+	<article class="main">
+		<div class="m-body">
+			<header class="m-title">
+				<span>通知发布</span>
+			</header>
+			<seciton class="m-content">
+				<div class="m-group">
+					<label class="m-grouptitle">标题:</label>
+					<input type="text" name="title" placeholder="请填写标题" value=""/>
+				</div>
+				<div class="m-group">
+					<label class="m-grouptitle">内容：</label>
+					<textarea name="describe" placeholder="字数限100字以内" /></textarea>
+				</div>
+				<div class="m-btnconfirm">
+					<a href="javascript:void(0)">发布</a>
+				</div>
+			</seciton>
+		</div>
+	</article>
+</block>
+

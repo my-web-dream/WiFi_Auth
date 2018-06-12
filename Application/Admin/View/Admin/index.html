@@ -1,0 +1,72 @@
+<!-- 主页面 -->
+<extend name="Public:admin" />
+<block name="admin">
+<script type="text/javascript">
+$(function(){  
+	$('#index').addClass('active');//添加选中样式
+})
+</script>
+<!-- 导航条 -->
+<div id="content-header">
+    <div id="breadcrumb"> <a href="#" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a></div>
+    <h1>WiFi管理平台</h1>
+</div>
+<!-- 导航条结束-->
+<div class="container-fluid"><hr>
+	<div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"> <i class="icon-briefcase"></i> </span>
+            <h5 >系统信息</h5>
+          </div>
+          <div class="widget-content">
+            <div class="row-fluid">
+              <div class="span6">
+                <table class="">
+                  <tbody>
+                    <tr>
+                      <td><h4><{$info.name}></h4></td>
+                    </tr>
+                    <tr>
+                      <td>位置：<{$info.position}></td>
+                    </tr>
+                    <tr>
+                      <td>路线：<{$info.road}></td>
+                    </tr>
+                    <tr>
+                      <td >简介：<{$info.describe}></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="span6">
+                <table class="table table-bordered table-invoice">
+                  	<tbody>
+	                    <tr>
+	                      	<td class="width30">Server:</td>
+	                      	<td class="width70"><strong><{$info.server}></strong></td>
+	                    </tr>
+	                    <tr>
+	                      	<td>Database:</td>
+	                      	<td><strong><{$info.database}></strong></td>
+	                    </tr>
+	                    <tr>
+	                      	<td>Language</td>
+	                      	<td><strong><{$info.language}></strong></td>
+	                    </tr>
+	                    <tr>
+	                  		<td class="width30">Framework:</td>
+	                    	<td class="width70"><strong><{$info.Framework}></strong></td>
+	                  	</tr>
+                	</tbody>   
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</block>

@@ -1,0 +1,86 @@
+<!-- 活动管理 -->
+<extend name="Public:busin" />
+<block name="busin">
+<!-- 引入时间控件 -->
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/js/datetimepicker/jquery.datetimepicker.css"/>
+<script src="__PUBLIC__/js/datetimepicker/jquery.js"></script>
+<script src="__PUBLIC__/js/datetimepicker/build/jquery.datetimepicker.full.js"></script>
+<script type="text/javascript">
+$(function(){  
+	$('#active').addClass('active');//添加选中样式
+	//日期控件调整
+	$("#datetimepicker").datetimepicker({
+		  minView: "month",//设置只显示到月份
+		  language:  'zh-CN',
+		  format : "20y-m-d",//日期格式
+		  autoclose:true,//选中关闭
+		  todayBtn: true//今日按钮
+	});
+})
+
+</script>
+	<!-- 导航条 -->
+	<div id="content-header">
+    	<div id="breadcrumb"> <a href="#" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="current">活动管理</a> </div>
+    	<h1>历史活动查看</h1>
+  	</div>
+  	<!-- 导航条结束-->
+  	
+  	<!-- 表格数据 -->
+  	<div class="container-fluid">
+    <hr>
+		<div class="row-fluid">
+       	<!-- 查看结果 -->
+			<div class="span12">
+        		<div class="widget-box">
+          			<div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            			<h5>活动信息</h5>
+          			</div>
+          			<form action="#" method="get" class="form-horizontal">
+			            <div class="control-group">
+			              	<label class="control-label">活动时间：</label>
+			              	<div class="controls">
+			                	<input type="text" class="span11" id='datetimepicker' style="width:150px;">
+			              	</div>
+			              	<script type="text/javascript">
+	 							$('#datetimepicker').datetimepicker({value:'<{$Think.get.time}>',step:10});
+							</script>
+			            </div>
+			            <div class="form-actions">
+			              <button type="button" class="btn btn-success">查看</button>
+			            </div>
+          			</form>
+          			<div class="widget-content nopadding">
+            		<table class="table table-bordered table-striped">
+            			<thead>
+	               			<tr>
+			                  	<th> <input type="checkbox"> </th>
+								<th> 序号 </th>
+								<th> 商铺名称 </th>
+								<th> 活动标题 </th>
+								<th> 发布时间 </th>
+								<th> 活动内容 </th>
+								<th> 操作</th>
+	                		</tr>
+              			</thead>
+              			<tbody>
+               				<volist name="info" id="va">
+							<tr>
+								<td><input type="checkbox"></td>
+								<td><{$i}></td>
+								<td><{$va.name}></td>
+								<td><{$va.title}></td>
+								<td><{$va.create_time|date='Y-m-d',###}></td>
+								<td><{$va.content}></td>
+								<td><a class="btn btn-primary btn-mini">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-danger btn-mini">删除</a> </td>
+							</tr>
+							</volist>
+              			</tbody>
+            		</table>
+          			</div>
+        		</div>
+       		</div>
+		</div>
+	</div>
+  	<!-- 表格数据结束 -->
+</block>

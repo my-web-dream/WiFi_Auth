@@ -1,0 +1,67 @@
+<?php
+namespace Admin\Controller;
+use Think\Controller;
+/**
+ * 本地公共类库文件
+ */
+class PublicController extends Controller {
+	/*
+	 *	curl(get请求)
+	*/
+	public function curl($url){
+		//1.实例化（初始化curl）  curl:网站抓取函数
+		$curl = curl_init();
+		//2.设置curl参数
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // 从证书中检查SSL加密算法是否存在
+		//3. 数据采集
+		$res= curl_exec($curl);
+		//4. 关闭
+		curl_close($curl);
+		return $res;
+	}
+	/*
+	 *	curl_post(post请求)
+	*/
+	public function curl_post($url,$post_data){
+		//1.实例化（初始化curl）  curl:网站抓取函数
+		$curl = curl_init();
+		//2.设置curl参数
+		curl_setopt($curl, CURLOPT_URL, $url);
+		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 跳过证书检查
+		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false); // 从证书中检查SSL加密算法是否存在
+		 
+		// 设置请求为post类型
+		curl_setopt($curl, CURLOPT_POST, 1);
+		// 添加post数据到请求中
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
+		//3. 数据采集
+		$res= curl_exec($curl);
+		//4. 关闭
+		curl_close($curl);
+		return $res;
+	}
+	/*
+	 * 文件下载 
+	 */
+	public function files_download($file){
+		$showname = 'XJ的文件-'.$file;		//下载时用户看到的文件名称
+		$public = './Public/File/';//公共路径
+		$file = $public.$file;		//文件实际路径
+		//实例化下载类库
+		$http = new \Org\Net\Http();
+		$http->download($file,$showname);
+	}
+	/**
+	 * 查询个人信息
+	 */
+	public function pro_info($username){
+		$info = M('Staff_info')
+		-> where(array('username'=>$username))
+		-> find();
+		return $info;
+	}
+}

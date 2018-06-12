@@ -1,0 +1,60 @@
+<!-- 商铺管理 -->
+<extend name="Public:admin" />
+<block name="admin">
+<script type="text/javascript">
+$(function(){  
+	$('#business').addClass('active');//添加选中样式
+})
+</script>
+	<!-- 导航条 -->
+	<div id="content-header">
+    	<div id="breadcrumb"> <a href="#" title="返回首页" class="tip-bottom"><i class="icon-home"></i> 首页</a> <a href="#" class="current">商家信息</a> </div>
+    	<h1>商家信息</h1>
+  	</div>
+  	<!-- 导航条结束-->
+  	
+  	<!-- 表格数据 -->
+  	<div class="container-fluid">
+    <hr>
+		<div class="row-fluid">
+			<div class="span12">
+        		<div class="widget-box">
+          			<div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+            			<h5>基本信息</h5>
+          			</div>
+          			<div class="widget-content nopadding">
+            		<table class="table table-bordered table-striped">
+            			<thead>
+	               			<tr>
+			                  	<th> <input type="checkbox"> </th>
+								<th> 序号 </th>
+								<th> 商铺名称 </th>
+								<th> 联系人 </th>
+								<th> 联系方式 </th>
+								<th> 行业类型 </th>
+								<th> 所在楼层 </th>
+								<th> 操作</th>
+	                		</tr>
+              			</thead>
+              			<tbody>
+               				<volist name="info" id="va">
+							<tr>
+								<td><input type="checkbox"></td>
+								<td><{$i}></td>
+								<td><{$va.name}></td>
+								<td><{$va.people}></td>
+								<td><{$va.phone}></td>
+								<td><{$va.type_name}></td>
+								<td><{$va.floor}></td>
+								<td><a class="btn btn-primary btn-mini">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-danger btn-mini">删除</a> </td>
+							</tr>
+							</volist>
+              			</tbody>
+            		</table>
+          			</div>
+        		</div>
+       		</div>
+		</div>
+	</div>
+  	<!-- 表格数据结束 -->
+</block>

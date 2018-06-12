@@ -1,0 +1,40 @@
+/* CSS Document */
+
+html {overflow:-moz-scrollbars-vertical; scrollbar-face-color:#E8E8E8;scrollbar-shadow-color:#C1C1BB;scrollbar-highlight-color:#C1C1BB;scrollbar-3dlight-color:#EBEBE4;scrollbar-darkshadow-color:#EBEBE4;scrollbar-track-color:#F4F4F0;scrollbar-arrow-color:#CACAB7; }
+
+*{padding:0; margin:0;}
+
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,blockquote,p,input{padding:0; margin:0;}   
+div,ul,li{list-style:none;}
+a{text-decoration: none; color:#636363;}
+a:hover { text-decoration: none; color:#ff0000;}
+h1,h2,h3,h4,h5,h6{font:12px normal; }
+.clear{margin:0px; padding:0px; clear:both;}
+TABLE {BORDER-COLLAPSE: collapse; border-spacing: 0;}
+
+img{border:0px;}
+
+body{font-size:12px; color:#636363; background:#91D8F6; font-family:Microsoft YaHei,Verdana, Arial, Helvetica, sans-serif;  padding:0; margin:0; behavior:url("../img/login/csshover.htc");}
+
+td{font-size:12px; line-height:22px;}
+
+
+#wrapper{ width:1312px; height:528px; padding:177px 0 0; margin:17px auto 0; background:url(../img/login/dbg_3.jpg) no-repeat;}
+/*--------网站头部 --------------*/
+.header{width:722px; height:346px; background:url(../img/login/bg_3.png) no-repeat; _background:none;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../img/login/bg_3.png"); margin:0 auto;}
+.title{font-size:32px; height:44px; width:722px; padding-top:40px; color:#2177B9; text-align:center;}
+
+.login{width:242px; overflow:hidden; margin:30px 0 0 400px;}
+.login label{ float:left; width:50px; text-align:right; padding:0 6px 0 0;}
+.login div {clear:both; padding:0 0 10px 0;}
+
+.text_1{ width:172px; height:24px; line-height:24px; border:0; background:url(../img/login/wn_3.jpg) no-repeat; vertical-align:middle;}
+.ckp{ width:179px; padding-left:454px; margin-top:8px; overflow:hidden;}
+.submit_2{ width:64px; height:24px; background:url(../img/login/wn_6.jpg) no-repeat; border:0; vertical-align:middle;}
+.ckp a{ color:#FF7800;}
+.ckp a:hover{ color:#ff0000;}
+.gsm{padding-left:438px;  margin-top:25px; color:#7996A2;}
+
+
+/*--------页脚信息--------------*/
+.footer{ width:702px; height:68px; margin:0 auto;}

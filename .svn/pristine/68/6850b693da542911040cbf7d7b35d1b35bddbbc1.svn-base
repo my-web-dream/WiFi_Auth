@@ -1,0 +1,456 @@
+<?php
+use Org\Net\IpLocation;
+/*
+ * 将含有汉字的数组转化为json
+ */
+header("Content-Type: text/html; charset=utf-8");
+function arrayRecursive(&$array, $function, $apply_to_keys_also = false)
+{
+    static $recursive_counter = 0;
+    if (++$recursive_counter > 1000) {
+        die('possible deep recursion attack');
+    }
+    foreach ($array as $key => $value) {
+        if (is_array($value)) {
+            arrayRecursive($array[$key], $function, $apply_to_keys_also);
+        } else {
+            $array[$key] = $function($value);
+        }
+        if ($apply_to_keys_also && is_string($key)) {
+            $new_key = $function($key);
+            if ($new_key != $key) {
+                $array[$new_key] = $array[$key];
+                unset($array[$key]);
+            }
+        }
+    }
+    $recursive_counter--;
+}
+
+/**************************************************************
+ *
+*  将数组转换为JSON字符串（兼容中文）
+*  @param  array   $array      要转换的数组
+*  @return string      转换得到的json字符串
+*  @access public
+*  @JSON函数，兼容中文，可以将数组转化为json数据格式。
+*************************************************************/
+function JSON($array) {
+    arrayRecursive($array, 'urlencode', true);
+    $json = json_encode($array);
+    return urldecode($json);
+}
+
+/**
+ * -默认当前时间
+ */
+function default_time($time){
+	if(!$time){
+		return date('Y-m-d',time());
+	}else{
+		return $time;
+	}
+}
+/*
+ * 模板自定义函数，含省略号
+ * @old string 原有的字符串
+ * $cat string 待拼接的字符串
+ */
+function catstr($old,$num){
+    if(mb_strlen($old,'utf-8') > $num){
+    	return mb_substr($old,0,$num,'utf-8')."...";
+    }else{
+        return $old;
+    }
+}
+
+/*
+ * 模板自定义函数，不含省略号
+* @old string 原有的字符串
+* $cat string 待拼接的字符串
+*/
+function catstr_nodel($old,$num){
+    if(mb_strlen($old,'utf-8') > $num){
+        return mb_substr($old,0,$num,'utf-8');
+    }else{
+        return $old;
+    }
+
+}
+
+
+/**
+ * 简单对称加密算法之加密
+ * @param String $string 需要加密的字串
+ * @param String $skey 加密EKY
+ * @author Anyon Zou <zoujingli@qq.com>
+ * @date 2013-08-13 19:30
+ * @update 2014-10-10 10:10
+ * @return String
+ */
+function encode($string = '', $skey = 'xj_miaolin_boss') {
+	$string = $string.'#'." *竴姝�:鎵撳紑鎴戠殑鐢";
+    $strArr = str_split(base64_encode($string));
+    $strCount = count($strArr);
+    foreach (str_split($skey) as $key => $value)
+        $key < $strCount && $strArr[$key].=$value;
+    return str_replace(array('=', '+', '/'), array('O0O0O', 'o000o', 'oo00o'), join('', $strArr));
+}
+/**
+ * 简单对称加密算法之解密
+ * @param String $string 需要解密的字串
+ * @param String $skey 解密KEY
+ * @author Anyon Zou <zoujingli@qq.com>
+ * @date 2013-08-13 19:30
+ * @update 2014-10-10 10:10
+ * @return String
+ */
+function decode($string = '', $skey = 'xj_miaolin_boss') {
+	
+    $strArr = str_split(str_replace(array('O0O0O', 'o000o', 'oo00o'), array('=', '+', '/'), $string), 2);
+    $strCount = count($strArr);
+    foreach (str_split($skey) as $key => $value)
+        $key <= $strCount && $strArr[$key][1] === $value && $strArr[$key] = $strArr[$key][0];
+    return explode('#',base64_decode(join('', $strArr)))[0];
+}
+
+
+/**
+ * 另一类对称加密算法
+ * @param string $data  需要加密的数据
+ * @param string $key   加密密钥
+ * @return string
+ */
+function encode1($data='', $key='gniCSOzZG+HnS9zcFea7SefNGhX')
+{
+    $key    =   md5($key);
+    $x      =   0;
+    $len    =   strlen($data);
+    $l      =   strlen($key);
+    for ($i = 0; $i < $len; $i++)
+    {
+    if ($x == $l)
+    {
+    $x = 0;
+    }
+        $char .= $key{$x};
+        $x++;
+    }
+    for ($i = 0; $i < $len; $i++)
+    {
+    $str .= chr(ord($data{$i}) + (ord($char{$i})) % 256);
+    }
+    return base64_encode($str);
+    }
+
+
+    /**
+     * 加密算法解密
+     * @param string $data  需要加密数据
+     * @param string $key   需要解密数据
+     * @return string
+     */
+function decode1($data='', $key='gniCSOzZG+HnS9zcFea7SefNGhX')
+    {
+        $key = md5($key);
+        $x = 0;
+        $data = base64_decode($data);
+        $len = strlen($data);
+        $l = strlen($key);
+        for ($i = 0; $i < $len; $i++)
+        {
+        	if ($x == $l)
+      		{
+        		$x = 0;
+        	}
+            $char .= substr($key, $x, 1);
+            $x++;
+        }
+        for ($i = 0; $i < $len; $i++)
+        {
+       		if (ord(substr($data, $i, 1)) < ord(substr($char, $i, 1)))
+        	{
+        		$str .= chr((ord(substr($data, $i, 1)) + 256) - ord(substr($char, $i, 1)));
+       		}
+        	else
+        	{
+        		$str .= chr(ord(substr($data, $i, 1)) - ord(substr($char, $i, 1)));
+        	}
+        }
+         return $str;
+    }
+    
+	/**
+	 *工人体征检测工人体温
+	 */
+    function worker_healthy_temp($temp){
+    	if($temp < '5' || $temp > '39')
+    	{
+    		$status = '1';		//表示身体状况异常
+    	}
+    	else{
+    		$status = '0';		//表示员工身体状况良好
+    	}
+    	return $status;
+    }
+    /**
+     * 工人体征检测工人运动量
+     */
+    function worker_healthy_activity($activity){
+		if($activity < '50'){
+			$status = '0';			//静止
+		}
+    	else if(($activity >= '50')&&($activity < '300')){
+			$status = '1';			//运动量低
+		}
+		else if(($activity >= '300')&&($activity < '600')){
+			$status = '2';			//运动量适中
+		}
+		else{
+			$status = '3';			//运动量高
+		}
+		return $status;
+    }
+    /**
+     * 检测工人考勤是否正常
+     */
+    function worker_attend($st_ontime,$st_offtime,$oncheck,$offcheck){
+    	$st_ontime_str = strtotime($st_ontime);		//获取每日上班时间戳
+    	$st_offtime_str = strtotime($st_offtime);	//获取每日下班时间戳
+    	$oncheck_str = strtotime($oncheck);			//获取实际上班时间戳
+    	$offcheck_str = strtotime($offcheck);		//获取实际下班时间戳
+    	if (($oncheck_str == "") && ($offcheck_str == "")){
+    		$status = '0';			//表旷工
+    	}
+    	else if (($oncheck_str == "") || ($offcheck_str == "")){
+    		$status = '1';			//表异常
+    	}
+    	else{//上下班均有数据
+    		if(($oncheck_str <= $st_ontime_str) && ($offcheck_str >= $st_offtime_str)){
+    			$status = '2';		//表正常
+    		}
+    		else{
+    			$status = '3';		//迟到或早退
+    		}
+    	}
+    	return $status;
+    }
+    /**
+     * 工人考勤 ——判断运动量范围
+     */
+    function worker_attend_activity($activity,$static,$low,$medium,$high){
+    	if($activity < '50'){
+    		$static++;
+    	}
+    	else if(($activity >= '50') && ($activity < '300')){
+    		$low++;		//运动量低
+    	}
+    	else if(($activity >= '300')&&($activity < '600')){
+    		$medium++;			//运动量适中
+    	}
+    	else{
+    		$high++;			//运动量高
+    	}
+    	return array('k1'=>$static,'k2'=>$low,'k3'=>$medium,'k4'=>$high);
+    }
+
+
+    /**
+     * 阿里大鱼短信接口
+     * @param $telphone                 接收短信的手机号
+     * @param $params                   短信模版替换内容  （数组）
+     * @param string $sign_name         短信模版名
+     * @param string $template_code     短信模版ID
+     * @return bool                     发送成功失败值
+     */
+//    function sendSMS($telphone, $params, $sign_name = '注册验证', $template_code = 'SMS_8085113') {
+function sendSMS($telphone, $params, $sign_name = '工程部告警信息', $template_code = 'SMS_10370513') {
+    $config = C('ALIDAYU_SETTING');
+    vendor('Alidayu.Autoloader');
+    $c = new \TopClient;
+    $c->appkey = $config['ak'];
+    $c->secretKey = $config['sk'];
+    $req = new \AlibabaAliqinFcSmsNumSendRequest;
+    $req->setSmsType("normal");
+    $req->setSmsFreeSignName($sign_name);
+    //创建随机数
+//    $data = [
+//        'code' => (string) mt_rand(1000, 9999),
+//        'product' => '邓狗大傻逼',
+//    ];
+    $req->setSmsParam(json_encode($params));
+    $req->setRecNum($telphone);
+    $req->setSmsTemplateCode($template_code);
+    $resp = $c->execute($req);
+    if (isset($resp->result->success) && $resp->result->success) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+/**
+ * 获取ip地址
+ * @return mixed
+ */
+function catch_ip_area(){
+    $data["ip"] = get_client_ip();
+//    $data["ip"] = "218.79.93.194";
+    import('ORG.Net.IpLocation');           //导入IpLocation类
+    $Ip = new IpLocation('UTFWry.dat');     //实例化类 参数表示IP地址库文件
+    $area = $Ip->getlocation($data["ip"]);
+    $data["ip_area"] =  $area['country'].$area['area'];
+    return $data;
+}
+
+/**
+ * 添加热值
+ * ps:需要传入内容
+ * @param $content
+ */
+function hot_value($content){
+    $par = catch_ip_area();
+    $data['ip']         = $par["ip"];       
+    $data['ip_area']    = $par["ip_area"];
+    $group_id = M("Staff_group")->where(array('username'=>$_SESSION["username"]))->field('id')->select();
+    $company_id = M("Staff_company")->where(array('username'=>$_SESSION["username"]))->field('id')->select();
+    $project_id = M("Staff_project")->where(array('username'=>$_SESSION["username"]))->field('id')->select();
+    $object_id = M("Staff_object")->where(array('username'=>$_SESSION["username"]))->field('id')->select();
+    if(($_SESSION["username"]) == 'admin'){
+        $data['level']  = 0;
+        $admin_id = M("Staff_group")->where(array('username'=>"admin"))->field('id')->select();;
+        $data['level_id'] = $admin_id[0]['id'];
+    }elseif ($group_id){
+        $data['level']  = 1;
+        $data['level_id'] = $group_id[0]['id'];
+    }elseif ($company_id){
+        $data['level']  = 2;
+        $data['level_id'] = $company_id[0]['id'];
+    }elseif ($project_id){
+        $data['level']  = 3;
+        $data['level_id'] = $project_id[0]['id'];
+    }elseif ($object_id){
+        $data['level']  = 5;
+        $data['level_id'] = $object_id[0]['id'];
+    }
+    $data['user_name']  = $_SESSION["username"];
+    $data['time']       = time();
+    $data['content']    = $content;
+    M("HotValue")->add($data);
+}
+
+
+/**
+ * 考勤专属 -- 当天考勤
+ */
+function device_attend_everyday($project_id){
+    //查出基本信息
+    //获取项目id
+    $project_id = $project_id;
+    $status = 0;
+    //获取当天时间
+    $select_day = date("Y-m-d");
+    $select_time = strtotime($select_day);
+    //获取提交日期的起止时间戳
+    $start = mktime(0, 0, 0, date("m", $select_time), date("d", $select_time), date("Y", $select_time));
+    $end = mktime(23, 59, 59, date("m", $select_time), date("d", $select_time), date("Y", $select_time));
+    //查询出该时间段离开区域的人员信息
+    $sql = " SELECT w.name,w.wrist_number,w.card_number,pro.id,pro.am_onTime,pro.am_offTime,pro.pm_onTime,pro.pm_offTime,l.outtime FROM worker_info w left join worker_leave l on w.name = l.worker_name left join project_info pro on w.project_id = pro.id WHERE l.status = $status AND l.outtime BETWEEN $start AND $end ";
+    $worker_info = M('WorkerInfo')->query($sql);
+    $attend = array();
+    //拼出该天的上下班时间.每个项目的工人上下班时间一致
+    $am_ontime = $select_day . ' ' . $worker_info[0]['am_ontime'];
+    $pm_offtime = $select_day . ' ' . $worker_info[0]['pm_offtime'];
+    //判断出迟到、早退
+    foreach($worker_info as $key=>&$value){
+        if(($value['outtime'] >strtotime($am_ontime)) && ($value['outtime'] < strtotime($am_ontime)+600)){
+            $attend[$value['name']][] = 1;   //迟到
+        }elseif(($value['outtime'] > strtotime($pm_offtime)-600) && ($value['outtime'] < strtotime($pm_offtime))){
+            $attend[$value['name']][] = 2;   //早退
+        }
+    }
+    //状态相加,保存
+    foreach($attend as $k=>$v){
+        $attend[$k] = array_sum($v);
+    }
+//      dump($attend);exit;
+    //循环出异常、旷工
+    foreach($worker_info as $key=>&$value){
+        //取出$attend(迟到/早退数组)的键名
+        $keys = array_keys($attend);
+        $data = array(
+            'worker_name'    => $value['name'],
+            'outtime' => array('between',array(strtotime($am_ontime),strtotime($pm_offtime))),
+        );
+        //查询出在上下班时间离开区域的人离开区域的点的个数
+        $cout = M('WorkerLeave')->where($data)->count();
+        //名字不在$attend(迟到/早退组),并且离开区域的点小于18个点为异常
+        if(!in_array($value['name'], $keys) && $cout > 5 && $cout < 18){
+            $attend[$value['name']] = 4;  //异常
+        }
+        //离开区域的点大于18个为旷工
+        if($cout > 18){
+            if(!in_array(4,$attend[$value['name']])){
+                $attend[$value['name']] = 5;  //旷工
+            }
+        }
+    }
+    //把考勤状态存入 离开区域的人员的信息中
+    $sql = "SELECT w. NAME,w.project_id,w.wrist_number,w. STATUS AS w_status,w.type_id AS type,w.card_number,pro.am_onTime AS worker_amtime,pro.am_offTime,pro.pm_onTime,pro.pm_offTime AS worker_pmtime,l.outtime FROM worker_info w LEFT JOIN worker_leave l ON w. NAME = l. worker_name LEFT JOIN project_info pro ON w.project_id = pro.id WHERE l. STATUS = 0 AND l.outtime BETWEEN $start AND $end GROUP BY w. NAME";
+    $pro_worker = M('WorkerInfo')->query($sql);
+//    dump($pro_worker);exit;
+    foreach($pro_worker as $key=>$value){
+        foreach($attend as $k=>$v){
+            if($value['name'] == $k){
+                $pro_worker[$key]['ad_status'] = $v;
+            }
+        }
+    }
+    //查出加班考勤
+    //查询出项目中有多少人
+    $item['w.project_id'] = $project_id;
+    $item['w.status'] = 1;    //在职
+    $info = M('WorkerInfo')->alias('w')
+        ->join("left join __PROJECT_INFO__ pro on pro.id = w.project_id")
+        ->field('w.name,w.project_id,w.wrist_number,w.status as w_status,w.type_id as type,w.card_number,pro.am_onTime as worker_amtime,pro.pm_offTime as worker_pmtime')
+        ->where($item)
+        ->select();
+    foreach($info as $k=>&$v){
+        //把日期保存为date
+        $v['date']        = $select_day;
+        $v['utcDateTime'] = strtotime($select_day);
+        foreach($pro_worker as $key=>$val){
+            //如果名字相同就把离开区域人员的考勤存入项目人员信息表中
+            if($v['name'] == $val['name']){
+                $v['ad_status'] = $val['ad_status'];
+            }else{          //如果没有在离开区域找到该工人,说明工作正常.(状态为0)
+                $v['ad_status'] = 0;
+            }
+        }
+    }
+    foreach($info as $k=>$v){   //改变一下键名
+        $dataa[$k]['worker_name'] = $v['name'];
+        $dataa[$k]['project_id'] = $v['project_id'];
+        $dataa[$k]['wrist_number'] = $v['wrist_number'];
+        $dataa[$k]['worker_status'] = $v['w_status'];
+        $dataa[$k]['worker_type_id'] = $v['type'];
+        $dataa[$k]['card_number'] = $v['card_number'];
+        $dataa[$k]['am_time'] = $v['worker_amtime'];
+        $dataa[$k]['pm_time'] = $v['worker_pmtime'];
+        $dataa[$k]['attend_date'] = $v['date'];
+        $dataa[$k]['attend_status'] = $v['ad_status'];
+    }
+    //循环出每条数据存入数据库
+    foreach($dataa as $key=>$val){
+        M("DeviceAttend")->add($val);
+        //success ^_^^_^^_^
+    }
+}
+function attend_everyday(){
+//    echo 1;exit;
+	$project_ids = M("ProjectInfo")->field('id')->select();
+    foreach($project_ids as $k=>$v){
+        $info[$v['id']] = device_attend_everyday($v['id']);
+    }
+}

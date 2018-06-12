@@ -1,0 +1,20 @@
+<extend name="Public:api" />
+<block name="content">
+	<!--活动提示 start-->
+	<div class="hd_tip">&nbsp;&nbsp;说明:&nbsp;&nbsp;本商场WIFI免费使用,每次使用2小时后将自动断线,断线后请重新打开认证页面,认证后即可继续上网!</div>
+	<!--活动提示 end-->
+	<!--服务列表 start-->
+	<ul class="list">
+		<li><a href="<{:U('api.php/login/free')}>" class="l1">免费上网</a></li>
+		<li><a href="javascript:void(0)" class="l2">短信认证</a></li>
+		<li><a href="<{:U('api.php/login/id_card')}>" class="l3">身份证认证</a></li>
+		<li><a href="javascript:void(0)" class="l4">QQ认证</a></li>
+		<li><a href="<{:U('api.php/login/weixin')}>" class="l5">微信认证</a></li>
+		<li><a href="javascript:void(0)" class="l6">微博认证</a></li>
+	</ul>
+	<!--服务列表 end-->
+	<!--免费上网入口 start-->
+	<div class="enter"><em>欢迎您使用商场Wifi！</em></div>
+	<!--免费上网入口 end-->
+	
+</block>
