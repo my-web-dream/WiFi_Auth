@@ -19,7 +19,7 @@ class AdminController extends Controller{
     	}
     }
 	public function test(){
-		echo time();//date('Y-m-d H:i:s',);
+		echo time();
 	}
 	/**
 	 * 管理员主页面
